@@ -1,7 +1,7 @@
-# todo_List
+# Todo List Project
 To-Do List project by Python and PostgreSQL
 
-# requirments
+# Requirments
 ```
 1- Python
 2- PostgreSQL
