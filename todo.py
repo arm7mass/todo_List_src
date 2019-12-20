@@ -60,16 +60,44 @@ db = TodoApp()
 # method to 
 def get_selected_row(event): # event refer to any thing the user does in the application  like button click
     global selected_task
-    index = list_bx.curselection()[0] # [0] to start from initial value 
-    selected_task = list_bx.get(index)
-    title_entry.delete(0, 'end')
-    title_entry.insert('end', selected_task[1])
+    index = list_bx.curselection()[0] # [0] to start from initial value return tuple for selcetion record
+    selected_task = list_bx.get(index) # passing the index from which i select
+    title_entry.delete(0, 'end') # delete record from select box 
+    title_entry.insert('end', selected_task[1]) # insert at the end of the data
 
 
-def view_records():
-    list_bx.delete(0, 'end')
+def view_records(): # 
+    list_bx.delete(0, 'end') # clear the list box  from the start to the end
     for row in db.view():
         list_bx.insert('end', row)
+
+
+def add_task():# add new task in db in list box
+    db.insert(title_text.get()) 
+    list_bx.delete(0, 'end')
+    list_bx.insert('end', (title_text.get()))
+    title_entry.delete(0, 'end')
+    con.commit()
+    view_records() # display all records
+    clear_screen() 
+
+
+def delete_task(): # delete any task 
+    db.delete(selected_task[0])
+    con.commit()
+
+
+def clear_screen(): # clear any enter
+    title_entry.delete(0, 'end')
+
+
+def update_records(): # update the task
+    db.update(selected_task[0], title_text.get())
+    title_entry.delete(0, 'end')
+    con.commit()
+
+
+
 
 
 
