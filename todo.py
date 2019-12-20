@@ -4,8 +4,6 @@ from tkinter import messagebox
 import psycopg2 as psy
 from dbconfig import dbcon
 
-selected_task=None
-
 # create connection variable
 con = psy.connect(**dbcon)  # (**) telling connection method to unpack connection setting 
 print(con)
@@ -59,11 +57,11 @@ db = TodoApp()
 
 # method to 
 def get_selected_row(event): # event refer to any thing the user does in the application  like button click
-    global selected_task
     index = list_bx.curselection()[0] # [0] to start from initial value return tuple for selcetion record
     selected_task = list_bx.get(index) # passing the index from which i select
-    title_entry.delete(0, 'end') # delete record from select box 
-    title_entry.insert('end', selected_task[1]) # insert at the end of the data
+    print(selected_task)
+    title_entry.delete(0, END) # delete record from select box 
+    title_entry.insert(END, selected_task[1]) # insert at the end of the data
 
 
 def view_records(): # 
@@ -82,9 +80,13 @@ def add_task():# add new task in db in list box
     clear_screen() 
 
 
-def delete_task(): # delete any task 
+def delete_task(): # delete any task
+    index = list_bx.curselection()[0] # [0] to start from initial value return tuple for selcetion record
+    selected_task = list_bx.get(index) 
     db.delete(selected_task[0])
     con.commit()
+    view_records() # display all records
+    clear_screen() 
 
 
 def clear_screen(): # clear any enter
@@ -92,10 +94,13 @@ def clear_screen(): # clear any enter
 
 
 def update_task(): # update the task
+    index = list_bx.curselection()[0] # [0] to start from initial value return tuple for selcetion record
+    selected_task = list_bx.get(index)
     db.update(selected_task[0], title_text.get())
     title_entry.delete(0, 'end')
     con.commit()
-
+    view_records() # display all records
+    clear_screen() 
 
 root = Tk()  # Create Application window
 
@@ -140,4 +145,5 @@ delete_btn.grid(row=15, column=2, padx=35)
 exit_btn = Button(root, text='Exit Application', bg='blue', fg='White', font='helvetica 10 bold', command=root.destroy)
 exit_btn.grid(row=15, column=3)
 
+view_records()
 root.mainloop() # run the application until exit 
