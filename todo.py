@@ -26,7 +26,7 @@ class TodoApp:
 
     # method to allow rows to fetch all records from database table  
     def view(self):
-        self.cursor.excute('SELECT * FROM todo')
+        self.cursor.execute('SELECT * FROM todo')
         rows = self.cursor.fetchall()
         return rows
 
@@ -34,7 +34,7 @@ class TodoApp:
     def insert(self, title):
         sql = ('INSERT INTO todo(title)VALUES (%s)') # query to insert
         values = [title]
-        self.cursor.excute(sql,values)
+        self.cursor.execute(sql,values)
         self.con.commit() # to save the record ( save what ever done)
         messagebox.showinfo(title='Todolist DataBase', message='New Task added to database')
 
@@ -42,7 +42,7 @@ class TodoApp:
     # method to update the record we already have in the database 
     def update(self, id, title):
         tsql = ('UPDATE todo SET title = %s WHERE id=%s') # query to update 
-        self.cursor.excute(tsql,[title, id])
+        self.cursor.execute(tsql,[title, id])
         self.con.commit() # to save the record ( save what ever done)
         messagebox.showinfo(title='Todolist DataBase', message='Task Updated')
 
@@ -50,7 +50,7 @@ class TodoApp:
     # method to delete record from the database 
     def delete(self, id):
         delquery = 'DELETE FROM todo WHERE id=%s' # query to Delete 
-        self.cursor.excute(delquery,[id])
+        self.cursor.execute(delquery,[id])
         self.con.commit() # to save the record ( save what ever done)
         messagebox.showinfo(title='Todolist DataBase', message='Task deleted')
 
@@ -91,15 +91,10 @@ def clear_screen(): # clear any enter
     title_entry.delete(0, 'end')
 
 
-def update_records(): # update the task
+def update_task(): # update the task
     db.update(selected_task[0], title_text.get())
     title_entry.delete(0, 'end')
     con.commit()
-
-
-
-
-
 
 
 root = Tk()  # Create Application window
@@ -119,13 +114,13 @@ title_entry.grid(row=0, column=1, sticky=W)
 
 # add a button to insert inputs into database
 
-add_btn = Button(root, text='Add Task', bg='blue', fg='white', font='helvetica 10 bold', command='')
+add_btn = Button(root, text='Add Task', bg='blue', fg='white', font='helvetica 10 bold', command=add_task)
 add_btn.grid(row=0,column=2, sticky=W)
 
 # add a list box to display data from database 
 list_bx = Listbox(root, height=16, width=40, font='helvetica 13', bg='white')
 list_bx.grid(row=3, column=1,columnspan=14, sticky=W + E, pady=40, padx=15 )
-
+list_bx.bind('<<ListboxSelet>>', get_selected_row) # <<ListboxSelet>> handle any event in list boxgi
 
 # add scollbar to enable scrolling
 scroll_bar = Scrollbar(root)
@@ -136,20 +131,13 @@ scroll_bar.configure(command=list_bx.yview)
 
 # add more Button Widgets
 
-modify_btn = Button(root, text='Modify Task', bg='purple', fg='White', font='helvetica 10 bold', command='')
+modify_btn = Button(root, text='Modify Task', bg='purple', fg='White', font='helvetica 10 bold', command=update_task)
 modify_btn.grid(row=15, column=1)
 
-delete_btn = Button(root, text='Delete Task', bg='red', fg='White', font='helvetica 10 bold', command='')
+delete_btn = Button(root, text='Delete Task', bg='red', fg='White', font='helvetica 10 bold', command=delete_task)
 delete_btn.grid(row=15, column=2, padx=35)
-
 
 exit_btn = Button(root, text='Exit Application', bg='blue', fg='White', font='helvetica 10 bold', command=root.destroy)
 exit_btn.grid(row=15, column=3)
-
-
-
-
-
-
 
 root.mainloop() # run the application until exit 
