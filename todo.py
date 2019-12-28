@@ -57,6 +57,7 @@ db = TodoApp()
 
 # method to 
 def get_selected_row(event): # event refer to any thing the user does in the application  like button click
+    global selected_task
     index = list_bx.curselection()[0] # [0] to start from initial value return tuple for selcetion record
     selected_task = list_bx.get(index) # passing the index from which i select
     print(selected_task)
